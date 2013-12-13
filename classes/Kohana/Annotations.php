@@ -116,10 +116,10 @@ class Kohana_Annotations
 	}
 
 	/**
-	* @param mixed $class
-	*
-	* @return ReflectionClass
-	*/
+	 * @param mixed $class
+	 *
+	 * @return ReflectionClass
+	 */
 	protected static function getReflectionClass($class)
 	{
 		$class instanceof \ReflectionClass or $class = new ReflectionClass($class);
