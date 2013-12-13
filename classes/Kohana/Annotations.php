@@ -30,7 +30,11 @@ class Kohana_Annotations
 				$path = Kohana::find_file(self::config('directory'), $file);
 				if (FALSE !== $path) {
 					require_once $path;
+
+					return TRUE;
 				}
+
+				return FALSE;
 			});
 
 			$cache = new \Doctrine\Common\Cache\ArrayCache;
@@ -94,6 +98,21 @@ class Kohana_Annotations
 		$method instanceof ReflectionMethod or $method = new ReflectionMethod($class, $method);
 
 		return static::instance()->getMethodAnnotation($method, $annotationName);
+	}
+
+	/**
+	 * @param $name
+	 *
+	 * @return object
+	 * @throws Doctrine\Common\Annotations\AnnotationException
+	 */
+	static function annotationClass($name)
+	{
+		if (!AnnotationRegistry::loadAnnotationClass($name)) {
+			throw new \Doctrine\Common\Annotations\AnnotationException('Annotation ' . $name . ' - not exists');
+		}
+
+		return new $name;
 	}
 
 	/**

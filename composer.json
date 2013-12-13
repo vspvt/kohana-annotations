@@ -1,7 +1,7 @@
 {
 	"name": "vspvt/kohana-annotations",
 	"type": "kohana-module",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Annotations module for Kohana 3.3.1",
 	"homepage": "https://github.com/vspvt/kohana-annotations",
 	"license": "MIT",
