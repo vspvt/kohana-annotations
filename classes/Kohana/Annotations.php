@@ -45,18 +45,6 @@ class Kohana_Annotations
 	}
 
 	/**
-	 * @param mixed $class
-	 *
-	 * @return ReflectionClass
-	 */
-	static function reflectionClass($class)
-	{
-		$class instanceof \ReflectionClass or $class = new ReflectionClass($class);
-
-		return $class;
-	}
-
-	/**
 	 * Get annotations for class
 	 *
 	 * @param \ReflectionClass|string|object $class
@@ -65,7 +53,7 @@ class Kohana_Annotations
 	 */
 	static function getClassAnnotations($class)
 	{
-		return static::instance()->getClassAnnotations(static::reflectionClass($class));
+		return static::instance()->getClassAnnotations(static::getReflectionClass($class));
 	}
 
 	/**
@@ -78,7 +66,46 @@ class Kohana_Annotations
 	 */
 	static function getClassAnnotation($class, $annotationName)
 	{
-		return static::instance()->getClassAnnotation(static::reflectionClass($class), $annotationName);
+		return static::instance()->getClassAnnotation(static::getReflectionClass($class), $annotationName);
+	}
+
+	/**
+	 * @param \ReflectionMethod|string $method
+	 * @param null                     $class
+	 *
+	 * @return array
+	 */
+	static function getMethodAnnotations($method, $class = NULL)
+	{
+		$method instanceof ReflectionMethod or $method = new ReflectionMethod($class, $method);
+
+		return static::instance()->getMethodAnnotations($method);
+	}
+
+	/**
+	 * @param      $method
+	 * @param      $annotationName
+	 * @param null $class
+	 *
+	 * @return null
+	 */
+	static function getMethodAnnotation($method, $annotationName, $class = NULL)
+	{
+		$method instanceof ReflectionMethod or $method = new ReflectionMethod($class, $method);
+
+		return static::instance()->getMethodAnnotation($method, $annotationName);
+	}
+
+	/**
+	* @param mixed $class
+	*
+	* @return ReflectionClass
+	*/
+	protected static function getReflectionClass($class)
+	{
+		$class instanceof \ReflectionClass or $class = new ReflectionClass($class);
+
+		return $class;
 	}
 
 }
