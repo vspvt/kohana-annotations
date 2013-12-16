@@ -8,26 +8,23 @@ trait Trait_Annotations
 	/**
 	 * @param string $methodName
 	 *
-	 * @return array
+	 * @return array<object>
 	 */
 	public function getAnnotations($methodName = NULL)
 	{
-		return NULL === $methodName
-			? Annotations::getClassAnnotations($this)
-			: Annotations::getMethodAnnotations($methodName, $this);
+		return Annotations::getAnnotations($this, $methodName);
 	}
 
 	/**
 	 * @param string $name
 	 * @param string $methodName
+	 * @param bool $nullable
 	 *
-	 * @return array
+	 * @return null|object
 	 */
-	public function getAnnotation($name, $methodName = NULL)
+	public function getAnnotation($name, $methodName = NULL, $nullable = TRUE)
 	{
-		return NULL === $methodName
-			? Annotations::getClassAnnotation($this, $name)
-			: Annotations::getMethodAnnotation($methodName, $name, $this);
+		return Annotations::getAnnotation($name, $this, $methodName, $nullable);
 	}
 
 	/**
@@ -38,6 +35,6 @@ trait Trait_Annotations
 	 */
 	public function hasAnnotation($name, $methodName = NULL)
 	{
-		return NULL !== $this->getAnnotation($name, $methodName);
+		return NULL !== Annotations::hasAnnotation($name, $this, $methodName);
 	}
 }

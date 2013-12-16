@@ -49,11 +49,11 @@ class Kohana_Annotations
 	}
 
 	/**
-	 * Get annotations for class
+	 * Get class annotations
 	 *
-	 * @param \ReflectionClass|string|object $class
+	 * @param mixed $class
 	 *
-	 * @return array
+	 * @return array<object>
 	 */
 	static function getClassAnnotations($class)
 	{
@@ -61,12 +61,12 @@ class Kohana_Annotations
 	}
 
 	/**
-	 * Get selected annotation for class
+	 * Get class annotation
 	 *
-	 * @param \ReflectionClass|string|object $class
-	 * @param string                         $annotationName
+	 * @param mixed  $class
+	 * @param string $annotationName
 	 *
-	 * @return null
+	 * @return null|object
 	 */
 	static function getClassAnnotation($class, $annotationName)
 	{
@@ -74,10 +74,12 @@ class Kohana_Annotations
 	}
 
 	/**
-	 * @param \ReflectionMethod|string $method
-	 * @param null                     $class
+	 * Get method annotations
 	 *
-	 * @return array
+	 * @param mixed $method
+	 * @param mixed $class
+	 *
+	 * @return array<object>
 	 */
 	static function getMethodAnnotations($method, $class = NULL)
 	{
@@ -87,11 +89,13 @@ class Kohana_Annotations
 	}
 
 	/**
-	 * @param      $method
-	 * @param      $annotationName
-	 * @param null $class
+	 * Get method annotation
 	 *
-	 * @return null
+	 * @param mixed  $method
+	 * @param string $annotationName
+	 * @param mixed  $class
+	 *
+	 * @return null|object
 	 */
 	static function getMethodAnnotation($method, $annotationName, $class = NULL)
 	{
@@ -101,7 +105,9 @@ class Kohana_Annotations
 	}
 
 	/**
-	 * @param $name
+	 * Get annotation object
+	 *
+	 * @param string $name
 	 *
 	 * @return object
 	 * @throws Doctrine\Common\Annotations\AnnotationException
@@ -125,6 +131,67 @@ class Kohana_Annotations
 		$class instanceof \ReflectionClass or $class = new ReflectionClass($class);
 
 		return $class;
+	}
+
+	/**
+	 * @param mixed $method
+	 * @param mixed $class
+	 *
+	 * @return ReflectionMethod
+	 */
+	protected static function getReflectionMethod($method, $class = NULL)
+	{
+		$method instanceof ReflectionMethod or $method = new ReflectionMethod($class, $method);
+
+		return $method;
+	}
+
+	/**
+	 * @param mixed $class
+	 * @param null  $method
+	 *
+	 * @return array
+	 */
+	static function getAnnotations($class, $method = NULL)
+	{
+		$result = [];
+		foreach (Arr::merge(self::getClassAnnotations($class), NULL !== $method
+			? self::getMethodAnnotations($method, $class) : []) as $obj) {
+			$result[get_class($obj)] = $obj;
+		};
+
+		return $result;
+	}
+
+	/**
+	 * @param string $name
+	 * @param mixed  $class
+	 * @param null   $method
+	 * @param bool   $nullable
+	 *
+	 * @return null|object
+	 */
+	static function getAnnotation($name, $class, $method = NULL, $nullable = TRUE)
+	{
+		$classAnnotation = self::getClassAnnotation($class, $name);
+		NULL === $method or $methodAnnotation = self::getMethodAnnotation($method, $name, $class);
+		$result = isset($methodAnnotation) ? $methodAnnotation : $classAnnotation;
+
+		return !$nullable && NULL === $result
+			? self::annotationClass($name)
+			: $result;
+	}
+
+	/**
+	 * @param string $name
+	 * @param mixed  $class
+	 * @param mixed  $method
+	 *
+	 * @return bool
+	 */
+	static function hasAnnotation($name, $class, $method = NULL)
+	{
+		return NULL !== self::getAnnotation($name, $class, $method, TRUE);
 	}
 
 }
