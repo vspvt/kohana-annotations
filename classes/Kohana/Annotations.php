@@ -207,9 +207,9 @@ class Kohana_Annotations
 	{
 		$annotation = self::getAnnotation($name, $class, $method, TRUE);
 
-		return NULL === $annotation || !isset($annotation->$param)
+		return NULL === $annotation || !isset($annotation->{$param})
 			? $default
-			: $annotation->param;
+			: $annotation->{$param};
 	}
 
 }
