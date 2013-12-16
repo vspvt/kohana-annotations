@@ -18,7 +18,7 @@ trait Trait_Annotations
 	/**
 	 * @param string $name
 	 * @param string $methodName
-	 * @param bool $nullable
+	 * @param bool   $nullable
 	 *
 	 * @return null|object
 	 */
@@ -36,5 +36,18 @@ trait Trait_Annotations
 	public function hasAnnotation($name, $methodName = NULL)
 	{
 		return NULL !== Annotations::hasAnnotation($name, $this, $methodName);
+	}
+
+	/**
+	 * @param string $name
+	 * @param string $param
+	 * @param string $methodName
+	 * @param mixed  $default
+	 *
+	 * @return mixed
+	 */
+	public function getAnnotationParam($name, $param, $methodName = NULL, $default = NULL)
+	{
+		return Annotations::getAnnotationParam($name, $param, $this, $methodName, $default);
 	}
 }
