@@ -173,13 +173,12 @@ class Kohana_Annotations
 	 */
 	static function getAnnotation($name, $class, $method = NULL, $nullable = TRUE)
 	{
-		$classAnnotation = self::getClassAnnotation($class, $name);
-		NULL === $method or $methodAnnotation = self::getMethodAnnotation($method, $name, $class);
-		$result = isset($methodAnnotation) ? $methodAnnotation : $classAnnotation;
+		NULL === $method or $annotation = self::getMethodAnnotation($method, $name, $class);
+		isset($annotation) or $annotation = self::getClassAnnotation($class, $name);
 
-		return !$nullable && NULL === $result
+		return !$nullable && NULL === $annotation
 			? self::annotationClass($name)
-			: $result;
+			: $annotation;
 	}
 
 	/**
