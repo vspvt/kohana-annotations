@@ -173,8 +173,12 @@ class Kohana_Annotations
 	 */
 	static function getAnnotation($name, $class, $method = NULL, $nullable = TRUE)
 	{
-		NULL === $method or $annotation = self::getMethodAnnotation($method, $name, $class);
-		isset($annotation) or $annotation = self::getClassAnnotation($class, $name);
+		try {
+			NULL === $method or $annotation = self::getMethodAnnotation($method, $name, $class);
+			isset($annotation) or $annotation = self::getClassAnnotation($class, $name);
+		} catch (ReflectionException $e) {
+			$annotation = NULL;
+		}
 
 		return !$nullable && NULL === $annotation
 			? self::annotationClass($name)
@@ -209,6 +213,19 @@ class Kohana_Annotations
 		return NULL === $annotation || !isset($annotation->{$param})
 			? $default
 			: $annotation->{$param};
+	}
+
+	/**
+	 * @param string $name
+	 * @param mixed  $class
+	 * @param mixed  $method
+	 * @param mixed  $default
+	 *
+	 * @return mixed
+	 */
+	static function getAnnotationValue($name, $class, $method = NULL, $default = NULL)
+	{
+		return self::getAnnotationParam($name, 'value', $class, $method, $default);
 	}
 
 }
